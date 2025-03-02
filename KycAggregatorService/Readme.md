@@ -37,6 +37,10 @@ KycAggregator/
 │
 ├── Services/         # Cache implementation (FileCache)
 │   └── FilCache.cs
+├── kyc_cache_/         # Cache Storage (FileCache)
+│   └── KycData_19951212-3456.json
+├── Unit tests/         # Unit tests for HTTP requests
+│   └── UnitTests.cs
 │
 ├── Program.cs        # Entry point of the application and dependency registration
 ├── appsettings.json  # Application settings and configuration

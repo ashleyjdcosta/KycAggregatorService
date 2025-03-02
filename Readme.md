@@ -41,7 +41,7 @@ JSON annotations (`JsonPropertyName`) are used in the model classes to ensure ac
 
 1.  **Clone the Repository:**
     ```bash
-    git clone [repository_url]
+    git clone https://github.com/ashleyjdcosta/KycAggregatorService.git
     ```
 2.  **Build the Project:**
     ```bash
