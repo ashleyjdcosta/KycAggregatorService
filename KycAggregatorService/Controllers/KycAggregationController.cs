@@ -42,7 +42,7 @@ public class KycAggregationController : ControllerBase
 
             _logger.LogInformation($"File cache miss for SSN: {ssn}, fetching data from APIs");
 
-
+            //Actual fetching of details 
             var personalDetailsResponse = await GetCustomerPersonalDetailsResponse(ssn);
             if (!personalDetailsResponse.IsSuccessStatusCode)
             {
@@ -64,6 +64,7 @@ public class KycAggregationController : ControllerBase
             }
             var kycForm = await kycFormResponse.Content.ReadFromJsonAsync<KycForm>();
 
+            //Aggregate the data
             var aggregatedKycData = new AggKycData
             {
                 Ssn = ssn,
@@ -116,7 +117,7 @@ public class KycAggregationController : ControllerBase
         return StatusCode((int)response.StatusCode, new { error = $"Error fetching {resourceName} from external service." });
     }
 
-    private async Task<HttpResponseMessage> GetCustomerPersonalDetailsResponse(string ssn)
+    internal async Task<HttpResponseMessage> GetCustomerPersonalDetailsResponse(string ssn)
     {
         var client = _httpClientFactory.CreateClient();
         return await client.GetAsync($"https://customerdataapi.azurewebsites.net/api/personal-details/{ssn}");
