@@ -2,25 +2,11 @@ name: .NET Core Service CI
 
 on:
   push:
-    branches: [ master ]
+    branches:
+      - master
   pull_request:
-    branches: [ master ]
-
-  # ← Add this block to allow manual runs with inputs
-  workflow_dispatch:
-    inputs:
-      configuration:
-        description: 'Build configuration'
-        required: true
-        default: 'Debug'
-      solution-name:
-        description: 'Solution file (e.g. KycAggregatorService.sln)'
-        required: true
-        default: 'KycAggregatorService.sln'
-      test-project-path:
-        description: 'Test project .csproj path'
-        required: true
-        default: 'KycAggregatorService/UnitTests/UnitTests.csproj'
+    branches:
+      - master
 
 jobs:
   build:
@@ -28,13 +14,12 @@ jobs:
 
     strategy:
       matrix:
-        # if triggered manually, matrix.configuration will be overridden
-        configuration: [ "${{ github.event.inputs.configuration }}" ]
+        configuration: [ Debug, Release ]
 
+    # <-- static defaults so they're never empty
     env:
-      # pulled from the manual inputs
-      Solution_Name: ${{ github.event.inputs.solution-name }}
-      Test_Project_Path: ${{ github.event.inputs.test-project-path }}
+      Solution_Name: KycAggregatorService.sln
+      Test_Project_Path: KycAggregatorService/UnitTests/UnitTests.csproj
 
     steps:
       - name: Checkout
@@ -48,14 +33,17 @@ jobs:
           dotnet-version: 8.0.x
 
       - name: Restore
+        # expands to: dotnet restore KycAggregatorService.sln
         run: dotnet restore ${{ env.Solution_Name }}
 
       - name: Build
+        # expands to: dotnet build KycAggregatorService.sln --configuration Debug --no-restore
         run: dotnet build ${{ env.Solution_Name }} \
               --configuration ${{ matrix.configuration }} \
               --no-restore
 
       - name: Test
+        # expands to: dotnet test KycAggregatorService/UnitTests/UnitTests.csproj --configuration Debug --no-build
         run: dotnet test ${{ env.Test_Project_Path }} \
               --configuration ${{ matrix.configuration }} \
               --no-build
